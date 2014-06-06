@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/05/2014 08:45:18 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="model.Imagen" table="imagen" catalog="arcitecar">
+        <id name="idimagen" type="java.lang.Integer">
+            <column name="idimagen" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="extra" class="model.Extra" fetch="select">
+            <column name="idextra" not-null="true" />
+        </many-to-one>
+        <property name="foto" type="binary">
+            <column name="foto" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="45" not-null="true" />
+        </property>
+        <property name="orden" type="int">
+            <column name="orden" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

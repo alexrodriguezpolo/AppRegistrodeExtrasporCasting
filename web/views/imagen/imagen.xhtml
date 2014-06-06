@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Listar Imagenes</title>
+    </h:head>
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" />
+                <h:form>
+                    <p:commandButton id="btnCreate" value="Crear" update=":formCreate" oncomplete="PF('dialogCrearImagen').show()" icon="ui-icon-document" title="Nueva Imagen"/>  
+                </h:form>
+                <h:form id="formDataTable" enctype="multipart/form-data">
+                    <p:dataTable id="extra" var="item" value="#{imagenBean.imagenes}" paginator="true" rows="8">
+                        <f:facet name="header">
+                            <p:outputLabel style="font-size: 18px;" value="Listado de Imagenes"/>
+                        </f:facet>
+                        <p:column headerText="Id">  
+                            <h:outputText value="#{item.idimagen}"/>  
+                        </p:column>
+                        <p:column headerText="Descripcion" filterBy="descripcion">  
+                            <h:outputText value="#{item.descripcion}"/>  
+                        </p:column>
+                        <p:column headerText="Aciones">
+                            <p:commandButton id="btnEdit" icon="ui-icon-pencil"  
+                                             value="Edit" update=":formUpdateImagen" oncomplete="PF('dialogUpdateImagen').show()">  
+                                <f:setPropertyActionListener value="#{item}" target="#{imagenBean.selectedImagen}" />
+                            </p:commandButton>
+                            <p:commandButton id="btnVer" icon="ui-icon-search" 
+                                             value="View Photo" update=":formViewImagen" oncomplete="PF('dialogView').show()">  
+                                <f:setPropertyActionListener value="#{item}" target="#{imagenBean.selectedImagen}" />
+                            </p:commandButton>
+                            <p:commandButton id="btnEliminar" icon="ui-icon-close" 
+                                             value="Delete" update=":formDeleteImagen" oncomplete="PF('dialogDeleteImagen').show()">  
+                                <f:setPropertyActionListener value="#{item}" target="#{imagenBean.selectedImagen}" />
+                            </p:commandButton>
+                        </p:column> 
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="formCreate" enctype="multipart/form-data">
+                    <p:dialog header="Crear Imagen" widgetVar="dialogCrearImagen" resizable="false" id="dlgCreate"  
+                              showEffect="fade" hideEffect="explode" modal="true" position="center">  
+                        <h:panelGrid id="display" style="margin:0 auto;">  
+                            <h:outputText value="Seleccionar Imagen:" /> 
+                            <p:fileUpload value="#{imagenBean.file}" mode="simple" allowTypes="/(\.|\/)(jpe?g|png)$/"/>
+                            <h:outputText value="Orden:" />  
+                            <p:inputText value="#{imagenBean.selectedImagen.orden}" style="font-weight:bold"/>  
+                            <h:outputText value="Nombre Extra:" />  
+                            <p:selectOneMenu id="nomExtra" value="#{imagenBean.selectedImagen.extra.idextra}" style="font-weight: bold">
+                                <f:selectItem itemLabel="Selecione Extra" itemValue="" />  
+                                <f:selectItems value="#{extraBean.selectOneItemsExtra}"/>
+                            </p:selectOneMenu>
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnCreateAceptar" value="Guardar" actionListener="#{imagenBean.upload}" ajax="false" update=":formDataTable, :msgs" oncomplete="PF('dialogCrearImagen').hide()" icon="ui-icon-disk"/>
+                                <p:commandButton id="btnCreateCancelar" value="Cancelar" oncomplete="PF('dialogCrearImagen').hide()" icon="ui-icon-close"/>
+                            </f:facet> 
+                        </h:panelGrid>  
+                    </p:dialog>  
+                </h:form>
+
+                <h:form id="formUpdateImagen">
+                    <p:dialog header="Editar Imagen" id="dialogUpdateImagen" position="center" widgetVar="dialogUpdateImagen" showEffect="fade" 
+                              hideEffect="explode" modal="true" minWidth="600" minHeight="500">
+                        <h:panelGrid id="display" columns="2" style="margin:0 auto;"> 
+                            <h:outputText value="Id:" />  
+                            <p:inputText value="#{imagenBean.selectedImagen.idimagen}" style="font-weight:bold"/>  
+                            <h:outputText value="Seleccionar Imagen:" /> 
+                            <p:fileUpload value="#{imagenBean.file}" mode="simple"
+                                          cancelLabel="Cancelar"
+                                          fileLimit="5120000"
+                                          fileLimitMessage="Imagen Muy Grande"                               
+                                          label="Selecionar"
+                                          invalidFileMessage="Tipo de imagen inválido"
+                                          invalidSizeMessage="Imagen muy grande"
+                                          allowTypes="/(\.|\/)(jpe?g|png)$/"/>
+                            <h:outputText value="Descripcion:" />  
+                            <p:inputText value="#{imagenBean.selectedImagen.descripcion}" style="font-weight:bold"/>  
+                            <h:outputText value="Orden:" />  
+                            <p:inputText value="#{imagenBean.selectedImagen.orden}" style="font-weight:bold"/>  
+                            <h:outputText value="Nombre Extra:" />  
+                            <p:selectOneMenu id="nomExtra" value="#{imagenBean.selectedImagen.extra.idextra}" style="font-weight: bold">
+                                <f:selectItem itemLabel="Selecione Extra" itemValue="" />  
+                                <f:selectItems value="#{extraBean.selectOneItemsExtra}"/>
+                            </p:selectOneMenu>
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnUpdateAceptar" value="Guardar" actionListener="#{imagenBean.btnUpdateImagen(event)}" update=":formDataTable, :msgs" oncomplete="PF('dialogUpdateImagen').hide()" icon="ui-icon-disk"/>
+                                <p:commandButton id="btnUpdateCancelar" value="Cancelar" oncomplete="PF('dialogUpdateImagen').hide()" icon="ui-icon-close"/>
+                            </f:facet> 
+                        </h:panelGrid> 
+                    </p:dialog> 
+                </h:form>
+
+                <h:form id="formViewImagen" enctype="multipart/form-data">
+                    <p:dialog header="Ver Imagen" id="dialogViewExtra" widgetVar="dialogView" showEffect="fade" 
+                              hideEffect="explode" modal="true" position="center"
+                              minWidth="600" minHeight="500">  
+                        <h:panelGrid id="display" style="margin:0 auto;">  
+                            <h:outputText value="#{imagenBean.selectedImagen.descripcion}" style="font-weight:bold"/>  
+                            <p:graphicImage url="../../resources/images/#{imagenBean.selectedImagen.descripcion}" 
+                                            height="500" width="400"/>
+                        </h:panelGrid> 
+                    </p:dialog> 
+                </h:form>
+
+                <h:form id="formDeleteImagen">
+                    <p:confirmDialog id="confirmDialog" showEffect="fade" hideEffect="explode"
+                                     message="¿Esta seguro de eliminar el Registro?" header="Eliminar Imagen"
+                                     severity="alert" widgetVar="dialogDeleteImagen">
+                        <h:inputHidden value="#{imagenBean.selectedImagen.idimagen}"/>
+                        <p:commandButton value="Aceptar" icon="ui-icon-check"
+                                         update=":formDataTable, :msgs" oncomplete="dialogDeleteImagen.hide()" actionListener="#{imagenBean.btnDeleteImagen(event)}"/>
+                        <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+                                         onclick="dialogDeleteImagen.hide();"/>     
+                    </p:confirmDialog>
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

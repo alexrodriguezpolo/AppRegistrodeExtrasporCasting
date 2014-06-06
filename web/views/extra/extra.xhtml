@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Listar Extras</title>
+    </h:head>
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" />
+                <h:form>
+                    <p:commandButton id="btnCreate" value="Crear" update=":formCreate" oncomplete="PF('dialogCrearExtra').show()" icon="ui-icon-document" title="Nuevo Extra"/>  
+                </h:form>
+                <h:form id="formDataTable">
+                    <p:dataTable id="extra" var="item" value="#{extraBean.extras}" paginator="true" rows="8">
+                        <f:facet name="header">
+                            <p:outputLabel style="font-size: 18px;" value="Listado de Extras"/>
+                        </f:facet>
+                        <p:column headerText="Id">  
+                            <h:outputText value="#{item.idextra}" />  
+                        </p:column> 
+                        <p:column headerText="Identificacion" filterBy="identificacion" >  
+                            <h:outputText value="#{item.identificacion}" />  
+                        </p:column>
+                        <p:column headerText="Nombres">  
+                            <h:outputText value="#{item.nombres}" />  
+                        </p:column>  
+                        <p:column headerText="Apellidos">  
+                            <h:outputText value="#{item.apellidos}" />  
+                        </p:column>  
+                        <p:column headerText="Sexo">  
+                            <h:outputText value="#{item.sexo}" />  
+                        </p:column>
+                        <p:column headerText="Estatura">  
+                            <h:outputText value="#{item.estatura}" />  
+                        </p:column>
+                        <p:column headerText="Peso">  
+                            <h:outputText value="#{item.peso}" />  
+                        </p:column>
+                        <p:column headerText="Telefono">  
+                            <h:outputText value="#{item.telefono}" />  
+                        </p:column>
+                        <p:column headerText="Aciones">
+                            <p:commandButton id="btnEdit" icon="ui-icon-pencil"  
+                                             value="Edit" update=":formUpdateExtra" oncomplete="PF('dialogUpdateExtra').show()">  
+                                <f:setPropertyActionListener value="#{item}" target="#{extraBean.selectedExtra}" />
+                            </p:commandButton>
+                            <p:commandButton id="btnVer" icon="ui-icon-search" 
+                                             value="View" update=":formViewExtra" oncomplete="PF('dialogView').show()">  
+                                <f:setPropertyActionListener value="#{item}" target="#{extraBean.selectedExtra}" />
+                            </p:commandButton>
+                            <p:commandButton id="btnEliminar" icon="ui-icon-close" 
+                                             value="Delete" update=":formDeleteExtra" oncomplete="PF('dialogDeleteExtra').show()">  
+                                <f:setPropertyActionListener value="#{item}" target="#{extraBean.selectedExtra}" />
+                            </p:commandButton>
+                        </p:column> 
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="formCreate">
+                    <p:dialog header="Crear Extra" widgetVar="dialogCrearExtra" resizable="false" id="dlgCreate"  
+                              showEffect="fade" hideEffect="explode" modal="true" position="center">  
+                        <h:panelGrid id="display" columns="2" style="margin:0 auto;">  
+                            <h:outputText value="Identificacion:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.identificacion}" style="font-weight:bold"/>  
+                            <h:outputText value="Nombre:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.nombres}" style="font-weight:bold"/>  
+                            <h:outputText value="Apellido:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.apellidos}" style="font-weight:bold"/>  
+                            <h:outputText value="Sexo:" />  
+                            <p:selectOneMenu id="sexo" value="#{extraBean.selectedExtra.sexo}" style="font-weight: bold">
+                                <f:selectItem itemLabel="Selecione su Sexo" itemValue="" />  
+                                <f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+                                <f:selectItem itemLabel="Femenino" itemValue="Femenino" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Estatura:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.estatura}" style="font-weight:bold"/>  
+                            <h:outputText value="Peso:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.peso}" style="font-weight:bold"/>  
+                            <h:outputText value="Telefono:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.telefono}" style="font-weight:bold"/>  
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnCreateAceptar" value="Guardar" actionListener="#{extraBean.btnCreateExtra(event)}" update=":formDataTable, :msgs" oncomplete="PF('dialogCrearExtra').hide()" icon="ui-icon-disk"/>
+                                <p:commandButton id="btnCreateCancelar" value="Cancelar" oncomplete="PF('dialogCrearExtra').hide()" icon="ui-icon-close"/>
+                            </f:facet> 
+                        </h:panelGrid>  
+                    </p:dialog>  
+                </h:form>
+
+
+                <h:form id="formUpdateExtra">
+                    <p:dialog header="Editar Extras" id="dialogUpdate" widgetVar="dialogUpdateExtra" showEffect="fade" 
+                              hideEffect="explode" modal="true" minWidth="600" minHeight="500" position="center">
+                        <h:panelGrid id="display" columns="2" style="margin:0 auto;"> 
+                            <h:outputText value="Id:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.idextra}" style="font-weight:bold"/>  
+                            <h:outputText value="Identificacion:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.identificacion}" style="font-weight:bold"/>  
+                            <h:outputText value="Nombre:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.nombres}" style="font-weight:bold"/>  
+                            <h:outputText value="Apellido:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.apellidos}" style="font-weight:bold"/>  
+                            <h:outputText value="Sexo:" />  
+                            <p:selectOneMenu id="sexo" value="#{extraBean.selectedExtra.sexo}" style="font-weight: bold">
+                                <f:selectItem itemLabel="Selecione su Sexo" itemValue="" />  
+                                <f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+                                <f:selectItem itemLabel="Femenino" itemValue="Femenino" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Estatura:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.estatura}" style="font-weight:bold"/>  
+                            <h:outputText value="Peso:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.peso}" style="font-weight:bold"/>  
+                            <h:outputText value="Telefono:" />  
+                            <p:inputText value="#{extraBean.selectedExtra.telefono}" style="font-weight:bold"/>  
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnUpdateAceptar" value="Guardar" actionListener="#{extraBean.btnUpdateExtra(event)}" 
+                                                 update=":formDataTable, :msgs" oncomplete="PF('dialogUpdateExtra').hide()" icon="ui-icon-disk"/>
+                                <p:commandButton id="btnUpdateCancelar" value="Cancelar" oncomplete="PF('dialogUpdateExtra').hide()" icon="ui-icon-close"/>
+                            </f:facet> 
+                        </h:panelGrid> 
+                    </p:dialog> 
+                </h:form>
+
+                <h:form id="formViewExtra">
+                    <p:dialog header="Ver extra" id="dialogViewExtra" widgetVar="dialogView" showEffect="fade" 
+                              hideEffect="explode" modal="true" position="center"
+                              minWidth="350" minHeight="400">  
+                        <h:panelGrid id="display" columns="2" style="margin:0 auto;">  
+                            <h:outputText value="Identificacion:" />  
+                            <h:outputText value="#{extraBean.selectedExtra.identificacion}" style="font-weight:bold"/>  
+                            <h:outputText value="Nombre:" />  
+                            <h:outputText value="#{extraBean.selectedExtra.nombres}" style="font-weight:bold"/>  
+                            <h:outputText value="Apellido:" />  
+                            <h:outputText value="#{extraBean.selectedExtra.apellidos}" style="font-weight:bold"/>  
+                            <h:outputText value="Sexo:" />  
+                            <h:outputText id="sexo" value="#{extraBean.selectedExtra.sexo}" style="font-weight: bold"/>
+                            <h:outputText value="Estatura:" />  
+                            <h:outputText value="#{extraBean.selectedExtra.estatura}" style="font-weight:bold"/>  
+                            <h:outputText value="Peso:" />  
+                            <h:outputText value="#{extraBean.selectedExtra.peso}" style="font-weight:bold"/>  
+                            <h:outputText value="Telefono:" />  
+                            <h:outputText value="#{extraBean.selectedExtra.telefono}" style="font-weight:bold"/>  
+                        </h:panelGrid> 
+                    </p:dialog> 
+                </h:form>
+                
+                <h:form id="formDeleteExtra">
+                    <p:confirmDialog id="confirmDialog" showEffect="fade" hideEffect="explode" 
+                                     message="¿Esta seguro de eliminar el Registro?" header="Eliminar Extra"
+                                     severity="alert" widgetVar="dialogDeleteExtra">
+                        <h:inputHidden value="#{extraBean.selectedExtra.idextra}"/>
+                        <p:commandButton value="Aceptar" icon="ui-icon-check"
+                                         update=":formDataTable, :msgs" oncomplete="dialogDeleteExtra.hide()" actionListener="#{extraBean.btnDeleteExtra(event)}"/>
+                        <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+                                         onclick="dialogDeleteExtra.hide();"/>     
+                    </p:confirmDialog>
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

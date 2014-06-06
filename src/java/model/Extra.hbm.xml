@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/05/2014 08:45:18 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="model.Extra" table="extra" catalog="arcitecar">
+        <id name="idextra" type="java.lang.Integer">
+            <column name="idextra" />
+            <generator class="identity" />
+        </id>
+        <property name="identificacion" type="int">
+            <column name="identificacion" not-null="true" />
+        </property>
+        <property name="nombres" type="string">
+            <column name="nombres" length="45" not-null="true" />
+        </property>
+        <property name="apellidos" type="string">
+            <column name="apellidos" length="45" not-null="true" />
+        </property>
+        <property name="sexo" type="string">
+            <column name="sexo" length="15" not-null="true" />
+        </property>
+        <property name="peso" type="string">
+            <column name="peso" length="10" not-null="true" />
+        </property>
+        <property name="estatura" type="string">
+            <column name="estatura" length="10" not-null="true" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="telefono" length="20" not-null="true" />
+        </property>
+        <set name="imagens" table="imagen" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idextra" not-null="true" />
+            </key>
+            <one-to-many class="model.Imagen" />
+        </set>
+    </class>
+</hibernate-mapping>
